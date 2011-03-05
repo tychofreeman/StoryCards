@@ -20,15 +20,10 @@ $(document).ready($('html').keypress(function(e) {
 	}
 ));
 
-var socket = new WebSocket('ws://localhost:8989/socket');
-socket.onopen=function() {
-	socket.send("hello");
-}
-socket.onmessage=function(msg) {
-	alert('got reply ' + msg);
-}
-
-
 function makeCardDiv(x, y, id) {
-	return "<div id='" + id + "' class='card' style='top:" + y + ";left:" + x + ";'></div>";
+	return "<div id='" + id + "' class='card' style='top:" + y + ";left:" + x + ";'>"
+		+ "<div class='title'></div>"
+		+ "<hr/>"
+		+ "<div class='desc'></div>"
+		+ "</div>";
 }

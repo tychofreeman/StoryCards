@@ -1,1 +1,19 @@
-div.card { position:absolute;height:100px;width:250px;background:aqua;}
+div.card {
+	position:absolute;
+	width:250px;
+	background:aqua;
+	border:2px solid black;
+}
+
+div.title {
+	background:green;
+	height:20px;
+	width:80%;
+	margin:auto;
+}
+
+div.desc {
+	height:80;
+	width:250px;
+	margin:auto;
+}
