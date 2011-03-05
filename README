@@ -1,0 +1,6 @@
+StoryCards is an online manager for story cards. It will eventually incorporate
+with a bug tracking system. However, the most important feature is that anyone
+looking at the same project will see live changes. A slightly less important
+feature is support for swimlanes and the generation of a Cumulative Flow Diagram.
+
+
