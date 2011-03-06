@@ -3,11 +3,18 @@ package main
 import (
 	"http"
 	"log"
-	"fmt"
-	"bytes"
+	//"fmt"
+	"json"
+	//"bytes"
 )
 
-var cards map[string]string
+type Card struct {
+	Id string;
+	Title, Desc string;
+	X, Y string;
+}
+
+var cards map[string]Card
 
 type HttpHandler interface {
 	DoPost(http.ResponseWriter, *http.Request)
@@ -27,7 +34,7 @@ func resourceHandler(w http.ResponseWriter, req *http.Request) {
 
 
 func addCard(id, title, desc, x, y string) {
-	cards[id] = fmt.Sprintf("Title[%s] Description[%s] %s,%s", title, desc, x, y)
+	cards[id] = Card { Id: id, Title: title, Desc: desc, X: x, Y: y }
 	log.Stdoutf("Adding card id=%s %s", id, cards[id])
 }
 
@@ -39,8 +46,9 @@ func moveCard(id, x, y string) {
 	log.Stdoutf("Moving card id=%s to %s,%s", id, x, y)
 }
 
-func listCards() string {
-	return fmt.Sprintf("%s", cards)
+func listCards(w http.ResponseWriter) {
+	bytes, _ := json.Marshal(cards)
+	w.Write(bytes)
 }
 
 func createCardHandler(w http.ResponseWriter, req *http.Request) {
@@ -75,14 +83,14 @@ func moveCardHandler(w http.ResponseWriter, req *http.Request) {
 
 func listCardHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		w.Write(bytes.NewBufferString(listCards()).Bytes());
+		listCards(w);
 	} else {
 		w.WriteHeader(400);
 	}
 }
 
 func main() {
-	cards = make(map[string]string)
+	cards = make(map[string]Card)
 	http.HandleFunc("/", resourceHandler)
 	http.HandleFunc("/CardService/create", createCardHandler)
 	http.HandleFunc("/CardService/remove", removeCardHandler)
