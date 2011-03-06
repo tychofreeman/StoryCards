@@ -1,22 +1,24 @@
-var id = 0;
 
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }
 
 $(document).ready($('#cardCreator').click(function(e) {
-		id = S4();
+		var id = S4();
 		var idSelector = '#' + id;
 		var title = $('#templateTitle').val();
 		var desc = $('#templateDesc').val();
-		var div = makeCardDiv(0, 300, id, title, desc);
+		var xPos = 0;
+		var yPos = 300;
+		var div = makeCardDiv(xPos, yPos, id, title, desc);
 		$(div).appendTo('body');
 		$('.card').draggable({
 			containment: 'parent',
 			create: function(event, ui) {
-				$('<div>Created by...</div>').appendTo(event.target)
+				$.post("CardService/create", { id: id, title: title, desc: desc, x: xPos, y: yPos });
 			},
 			drag:   function(event, ui) {
+				$.post("CardService/move", { id: id, x: event.pageX, y: event.pageY });
 			},
 			start:  function(event, ui) {
 				//alert("Starting to drag...");
@@ -27,11 +29,18 @@ $(document).ready($('#cardCreator').click(function(e) {
 			}
 		});
 		$(idSelector + '>div.deleteBox').mousedown(function(e) {
+			$.get("CardService/remove", { id: id });
 			$(idSelector).remove();
 		});
 		// send the div delta back to base
 	}
 ));
+
+$(document).ready(function(){
+	$.get("CardService/list", {}, function(data) {
+		console.log(data);
+	});
+});
 
 
 
