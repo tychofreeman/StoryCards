@@ -33,13 +33,6 @@ html, body {
 	width:200px;
 }
 
-#cardCreator {
-	min-height:80%;
-	height:auto !important;
-	width:100%;
-	background:darkred;
-}
-
 #cardCollection {
 	float:left;
 	position:relative;
@@ -47,4 +40,8 @@ html, body {
 	height:auto !important;
 	width:auto !important;
 	min-width:80%;
+}
+
+div.movingCard {
+	background-color: blue;
 }
