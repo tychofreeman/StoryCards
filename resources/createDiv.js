@@ -35,7 +35,7 @@ function addCard(xPos, yPos, id, title, desc) {
 			$.post("CardService/create", { id: id, title: title, desc: desc, x: xPos, y: yPos });
 		},
 		drag:   function(event, ui) {
-			$.post("CardService/move", { id: id, x: event.pageX, y: event.pageY });
+			$.post("CardService/move", { id: event.target.id, x: event.target.offsetLeft, y: event.target.offsetTop });
 		},
 		start:  function(event, ui) {
 			//alert("Starting to drag...");

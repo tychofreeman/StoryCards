@@ -43,12 +43,17 @@ func removeCard(id string) {
 }
 
 func moveCard(id, x, y string) {
-	log.Stdoutf("Moving card id=%s to %s,%s", id, x, y)
+	c := cards[id]
+	c.X = x
+	c.Y = y
+	cards[id] = c
+	log.Stdoutf("Moving card id=%s to %s,%s", id, c.X, c.Y)
 }
 
 func listCards(w http.ResponseWriter) {
 	bytes, _ := json.Marshal(cards)
 	w.Write(bytes)
+	
 }
 
 func createCardHandler(w http.ResponseWriter, req *http.Request) {
