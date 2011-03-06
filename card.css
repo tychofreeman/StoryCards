@@ -45,3 +45,15 @@ html, body {
 div.movingCard {
 	background-color: blue;
 }
+
+div.deleteBox {
+	float:right;
+	height:20px;
+	background-color:black;
+	width:10%;
+	margin:auto;
+	position:relative;
+	top:0px;
+	
+	display:inline;
+}
