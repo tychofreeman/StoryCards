@@ -3,6 +3,22 @@ function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }
 
+var socket;
+
+$(document).ready(function() {
+	socket = new io.Socket('localhost');
+	socket.connect();
+	socket.on('connect', function() {
+		console.log('connected...');
+	});
+	
+	socket.on('message', function(data) {
+		console.log('data: ' + data);
+	});
+
+	socket.send('hi there!!');
+});
+
 $(document).ready($('#cardCreator').click(function(e) {
 		var id = S4();
 		var title = $('#templateTitle').val();
@@ -36,6 +52,7 @@ function addCard(xPos, yPos, id, title, desc) {
 		},
 		drag:   function(event, ui) {
 			$.post("CardService/move", { id: event.target.id, x: event.target.offsetLeft, y: event.target.offsetTop });
+			socket.send('moving card...');
 		},
 		start:  function(event, ui) {
 			//alert("Starting to drag...");

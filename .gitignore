@@ -1,3 +1,7 @@
 go-src/*.out
+go-src/src/*.8
+go-src/src/*.6
+go-src/stories
 .*.swp
 .*.swo
+
