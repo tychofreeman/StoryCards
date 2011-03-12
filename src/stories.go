@@ -49,7 +49,12 @@ type HttpHandler interface {
 func resourceHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		log.Printf("Serving up path %s", req.URL.Path)
-		http.ServeFile(w, req, "." + req.URL.Path)
+		if req.URL.Path == "/" {
+			log.Printf("...redirecting to [resources/index.html]")
+			http.ServeFile(w, req, "resources/index.html")
+		} else {
+			http.ServeFile(w, req, "resources/" + req.URL.Path)
+		}
 	} else {
 		w.WriteHeader(400);
 	}
@@ -104,14 +109,17 @@ func main() {
 	sio.OnDisconnect(func (c *socketio.Conn) { sio.BroadcastExcept(c, struct{ announcement string } {"disconnected: " + c.String()}) })
 	sio.OnMessage(func (c *socketio.Conn, msg socketio.Message) { sio.BroadcastExcept(c, struct{ message []string }{[]string{c.String(), msg.Data()}}) })
 
-	http.HandleFunc("/", resourceHandler)
-	http.HandleFunc("/CardService/create", createCardHandler)
-	http.HandleFunc("/CardService/remove", removeCardHandler)
-	http.HandleFunc("/CardService/move",   moveCardHandler)
-	http.HandleFunc("/CardService/list",   listCardHandler)
+	mux := sio.ServeMux()
+
+	mux.HandleFunc("/", resourceHandler)
+	mux.HandleFunc("/CardService/create", createCardHandler)
+	mux.HandleFunc("/CardService/remove", removeCardHandler)
+	mux.HandleFunc("/CardService/move",   moveCardHandler)
+	mux.HandleFunc("/CardService/list",   listCardHandler)
+
 	log.Printf("About to listen on 10443. Go to https://127.0.0.1:10443/")
-	err := http.ListenAndServe(":10443", nil)
-	if err != nil {
+
+	if err := http.ListenAndServe(":10443", mux); err != nil {
 		log.Fatal(err)
 	}
 }
